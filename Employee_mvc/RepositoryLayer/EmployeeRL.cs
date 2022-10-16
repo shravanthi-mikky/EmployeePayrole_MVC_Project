@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace Employee_mvc.RepositoryLayer
 {
-    public class EmployeeRL
+    public class EmployeeRL : IEmployeeRL
     {
         SqlConnection sqlConnection;
         string ConnString = "Data Source=LAPTOP-2UH1FDRP\\MSSQLSERVER01;Initial Catalog=Employ_mvc;Integrated Security=True;";
