@@ -38,5 +38,84 @@ namespace Employee_mvc.Controllers
             }
             return View(employee);
         }
+
+        //Details Api
+
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            EmployeeModel employee = employeeRL.GetEmployeeData(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
+        }
+
+        //Edit Api
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            EmployeeModel employee = employeeRL.GetEmployeeData(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
+        }
+
+        [HttpPost]
+        
+        public IActionResult Edit(int id, [Bind] EmployeeModel employee)
+        {
+            if (id != employee.EmployeeId)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                employeeRL.UpdateEmployee(employee);
+                return RedirectToAction("ListOfEmployee");
+            }
+            return View(employee);
+        }
+
+        //Delete API
+
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            EmployeeModel employee = employeeRL.GetEmployeeData(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(employee);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int? id)
+        {
+            employeeRL.DeleteEmployee(id);
+            return RedirectToAction("ListOfEmployee");
+        }
+
     }
 }
