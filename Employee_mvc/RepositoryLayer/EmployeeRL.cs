@@ -18,7 +18,7 @@ namespace Employee_mvc.RepositoryLayer
                 using (sqlConnection = new SqlConnection(ConnString))
                 {
                     SqlCommand com = new SqlCommand("Sp_AddEmployee", sqlConnection);
-                    com.CommandType = System.Data.CommandType.StoredProcedure;
+                    com.CommandType = CommandType.StoredProcedure;
 
                     sqlConnection.Open();
 
@@ -78,10 +78,8 @@ namespace Employee_mvc.RepositoryLayer
             }
             catch (Exception)
             {
-
                 throw;
             }
-
         }
 
         //Get all
@@ -155,32 +153,59 @@ namespace Employee_mvc.RepositoryLayer
             return false;
         }
 
-        //Get employee by ID
+        //Get employee by ID using stored procedure
 
         public object Retrive_Employee_Details(EmployeeIdModel employeeIdModel)
         {
             SqlConnection conn = new SqlConnection(ConnString);
             SqlCommand com = new SqlCommand("Retrive_1_BookDetails", conn);
             com.CommandType = CommandType.StoredProcedure;
-            com.Parameters.AddWithValue("@bookId", employeeIdModel.EmployeeId);
+            com.Parameters.AddWithValue("@EmployeeId", employeeIdModel.EmployeeId);
             conn.Open();
             EmployeeModel emp_model = new EmployeeModel();
-            SqlDataReader rd = com.ExecuteReader();
-            if (rd.HasRows)
+            SqlDataReader readerd = com.ExecuteReader();
+            if (readerd.HasRows)
             {
-                while (rd.Read())
+                while (readerd.Read())
                 {
-                    emp_model.EmployeeId = Convert.ToInt32(rd["EmployeeId"]);
-                    emp_model.Name = rd["Name"].ToString();
-                    emp_model.Profile = rd["Profile"].ToString();
-                    emp_model.Gender = rd["Gender"].ToString();
-                    emp_model.Department = (rd["Department"]).ToString();
-                    emp_model.Salary = (rd["Salary"]).ToString();
-                    emp_model.StartDate = ((DateTime)rd["StartDate"]);
+                    emp_model.EmployeeId = Convert.ToInt32(readerd["EmployeeId"]);
+                    emp_model.Name = readerd["Name"].ToString();
+                    emp_model.Profile = readerd["Profile"].ToString();
+                    emp_model.Gender = readerd["Gender"].ToString();
+                    emp_model.Department = (readerd["Department"]).ToString();
+                    emp_model.Salary = (readerd["Salary"]).ToString();
+                    emp_model.StartDate = ((DateTime)readerd["StartDate"]);
                 }
                 return emp_model;
             }
             return null;
+        }
+
+        //Get the details of a particular employee    
+        public EmployeeModel GetEmployeeData(int? id)
+        {
+            EmployeeModel employee = new EmployeeModel();
+
+            using (SqlConnection con = new SqlConnection(ConnString))
+            {
+                string sqlQuery = "SELECT * FROM tblEmployee WHERE EmployeeID= " + id;
+                SqlCommand cmd = new SqlCommand(sqlQuery, con);
+
+                con.Open();
+                SqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    employee.EmployeeId = Convert.ToInt32(rdr["EmployeeID"]);
+                    employee.Name = rdr["Name"].ToString();
+                    employee.Profile = rdr["Profile"].ToString();
+                    employee.Gender = rdr["Gender"].ToString();
+                    employee.Department = rdr["Department"].ToString();
+                    employee.Salary = rdr["Salary"].ToString();
+                    employee.StartDate = ((DateTime)rdr["StartDate"]);
+                }
+            }
+            return employee;
         }
 
     }
