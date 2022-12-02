@@ -6,9 +6,9 @@ namespace Employee_mvc.RepositoryLayer
     public interface IEmployeeRL
     {
         EmployeeModel AddEmployee(EmployeeModel emp);
-        bool DeleteBook(EmployeeIdModel employeeDeleteModel);
         List<EmployeeModel> GetAllEmployees();
-        object Retrive_Employee_Details(EmployeeIdModel employeeIdModel);
-        EmployeeModel UpdateBook(EmployeeModel emp);
+        public EmployeeModel GetEmployeeData(int? id);
+        public EmployeeModel UpdateEmployee(EmployeeModel emp);
+        public void DeleteEmployee(int? id);
     }
 }
